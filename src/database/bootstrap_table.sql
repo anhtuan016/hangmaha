@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS product_images;
 DROP TABLE IF EXISTS product_categories;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS tags;
 
 -- Create the Category table
 CREATE TABLE categories (
@@ -43,12 +44,18 @@ CREATE TABLE product_images (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create the ProductTag table
-CREATE TABLE product_tags (
+-- Create the Tags table
+CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
-    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
-    tag VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL UNIQUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create the Product_Tag junction table for many-to-many relationship
+CREATE TABLE product_tags (
+    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
+    tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
+    PRIMARY KEY (product_id, tag_id)
 );
 
 -- Create indexes for better performance
@@ -56,7 +63,7 @@ CREATE INDEX idx_product_categories_product_id ON product_categories(product_id)
 CREATE INDEX idx_product_categories_category_id ON product_categories(category_id);
 CREATE INDEX idx_product_images_product_id ON product_images(product_id);
 CREATE INDEX idx_product_tags_product_id ON product_tags(product_id);
-CREATE INDEX idx_product_tags_tag ON product_tags(tag);
+CREATE INDEX idx_product_tags_tag_id ON product_tags(tag_id);
 
 -- Insert sample data
 INSERT INTO categories (name, description) VALUES
@@ -103,17 +110,29 @@ INSERT INTO product_images (product_id, image_url, is_primary) VALUES
 (2, 'https://picsum.photos/200', false),
 (3, 'https://picsum.photos/200', false);
 
-INSERT INTO product_tags (product_id, tag) VALUES
-(1, 'tech'), (1, 'mobile'), (1, 'smartphone'),
-(2, 'apparel'), (2, 'casual'), (2, 'fashion'),
-(3, 'education'), (3, 'programming'), (3, 'computer science'),
-(4, 'garden'), (4, 'outdoor'), (4, 'home improvement'),
-(5, 'entertainment'), (5, 'family'), (5, 'indoor activity'),
-(6, 'sports'), (6, 'tennis'), (6, 'fitness'),
-(7, 'beauty'), (7, 'makeup'), (7, 'cosmetics'),
-(8, 'car accessory'), (8, 'phone accessory'), (8, 'travel'),
-(9, 'food'), (9, 'beverage'), (9, 'organic'),
-(10, 'pet'), (10, 'dog'), (10, 'pet accessory');
+INSERT INTO tags (name) VALUES
+('tech'), ('mobile'), ('smartphone'),
+('apparel'), ('casual'), ('fashion'),
+('education'), ('programming'), ('computer science'),
+('garden'), ('outdoor'), ('home improvement'),
+('entertainment'), ('family'), ('indoor activity'),
+('sports'), ('tennis'), ('fitness'),
+('beauty'), ('makeup'), ('cosmetics'),
+('car accessory'), ('phone accessory'), ('travel'),
+('food'), ('beverage'), ('organic'),
+('pet'), ('dog'), ('pet accessory');
+
+INSERT INTO product_tags (product_id, tag_id) VALUES
+(1, 1), (1, 2), (1, 3),
+(2, 4), (2, 5), (2, 6),
+(3, 7), (3, 8), (3, 9),
+(4, 10), (4, 11), (4, 12),
+(5, 13), (5, 14), (5, 15),
+(6, 16), (6, 17), (6, 18),
+(7, 19), (7, 20), (7, 21),
+(8, 22), (8, 23), (8, 24),
+(9, 25), (9, 26), (9, 27),
+(10, 28), (10, 29), (10, 30);
 
 -- Sample queries
 
@@ -126,9 +145,10 @@ LEFT JOIN categories c ON pc.category_id = c.id
 GROUP BY p.id, p.name, p.price, pi.image_url;
 
 -- Get all products with their tags
-SELECT p.id, p.name, STRING_AGG(pt.tag, ', ') as tags
+SELECT p.id, p.name, STRING_AGG(t.name, ', ') as tags
 FROM products p
 LEFT JOIN product_tags pt ON p.id = pt.product_id
+LEFT JOIN tags t ON pt.tag_id = t.id
 GROUP BY p.id, p.name;
 
 -- Get products in a specific category
@@ -142,4 +162,5 @@ WHERE c.name = 'Electronics';
 SELECT DISTINCT p.id, p.name, p.price
 FROM products p
 JOIN product_tags pt ON p.id = pt.product_id
-WHERE pt.tag = 'tech';
+JOIN tags t ON pt.tag_id = t.id
+WHERE t.name = 'tech';
