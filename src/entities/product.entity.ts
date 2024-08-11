@@ -7,9 +7,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Categories } from "./Categories";
-import { ProductImages } from "./ProductImages";
-import { Tags } from "./Tags";
+import { Category } from "./category.entity";
+import { ProductImages } from "./product-image.entity";
+import { Tags } from "./tag.entity";
 import { Expose } from "class-transformer";
 
 @Index("products_pkey", ["id"], { unique: true })
@@ -51,9 +51,9 @@ export class Products {
   @Expose()
   updatedAt: Date | null;
 
-  @ManyToMany(() => Categories, (categories) => categories.products)
+  @ManyToMany(() => Category, (categories) => categories.products)
   @Expose()
-  categories: Categories[];
+  categories: Category[];
 
   @OneToMany(() => ProductImages, (productImages) => productImages.product)
   @Expose()

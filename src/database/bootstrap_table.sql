@@ -65,10 +65,10 @@ CREATE INDEX idx_product_images_product_id ON product_images(product_id);
 CREATE INDEX idx_product_tags_product_id ON product_tags(product_id);
 CREATE INDEX idx_product_tags_tag_id ON product_tags(tag_id);
 
--- Insert sample data
+-- Insert test data into categories table
 INSERT INTO categories (name, description) VALUES
-('Electronics', 'Electronic devices and accessories'),
-('Clothing', 'Apparel and fashion items'),
+('Electronics', 'Gadgets and electronic devices'),
+('Clothing', 'Apparel for all ages'),
 ('Books', 'Physical and digital books'),
 ('Home & Garden', 'Items for home improvement and gardening'),
 ('Toys & Games', 'Entertainment for all ages'),
@@ -76,91 +76,75 @@ INSERT INTO categories (name, description) VALUES
 ('Beauty & Personal Care', 'Cosmetics and personal care products'),
 ('Automotive', 'Parts and accessories for vehicles'),
 ('Food & Grocery', 'Edible items and household supplies'),
-('Pet Supplies', 'Products for pets');
+('Pet Supplies', 'Products for pets'),
+('Jewelry', 'Precious and fashion jewelry'),
+('Office Supplies', 'Items for office and school use');
 
+-- Insert test data into products table
 INSERT INTO products (name, description, price, stock_quantity) VALUES
-('Smartphone', '<p>A high-end smartphone with advanced features.</p>', 699.99, 50),
-('T-shirt', '<p>A comfortable cotton t-shirt.</p>', 19.99, 100),
-('Python Programming', '<p>A comprehensive guide to Python programming.</p>', 39.99, 30),
-('Garden Hose', '<p>Durable 50ft garden hose.</p>', 29.99, 75),
-('Board Game', '<p>Family-friendly strategy board game.</p>', 24.99, 40),
-('Tennis Racket', '<p>Professional-grade tennis racket.</p>', 89.99, 25),
-('Lipstick', '<p>Long-lasting matte lipstick.</p>', 14.99, 60),
-('Car Phone Mount', '<p>Adjustable car phone holder.</p>', 19.99, 80),
-('Organic Coffee', '<p>Fair-trade organic coffee beans.</p>', 12.99, 100),
-('Dog Leash', '<p>Retractable dog leash for medium to large dogs.</p>', 24.99, 45);
+('Smartphone X', 'Latest model with advanced features', 799.99, 50),
+('Classic T-Shirt', 'Comfortable cotton t-shirt', 19.99, 200),
+('Bestseller Novel', 'Award-winning fiction book', 24.99, 100),
+('Garden Hose', 'Durable 50ft garden hose', 34.99, 75),
+('Board Game Set', 'Family-friendly strategy game', 39.99, 60),
+('Tennis Racket Pro', 'Professional-grade tennis racket', 129.99, 30),
+('Organic Face Cream', 'Natural ingredients face moisturizer', 29.99, 150),
+('Car Phone Mount', 'Adjustable car phone holder', 15.99, 100),
+('Gourmet Coffee Beans', 'Premium roasted coffee beans', 12.99, 80),
+('Dog Leash', 'Reflective dog leash for medium to large dogs', 18.99, 120),
+('Wireless Earbuds', 'True wireless bluetooth earbuds', 89.99, 40),
+('Yoga Mat', 'Non-slip exercise yoga mat', 25.99, 90);
 
+-- Insert test data into product_categories junction table
 INSERT INTO product_categories (product_id, category_id) VALUES
-(1, 1), (2, 2), (3, 3), (4, 4), (5, 5),
-(6, 6), (7, 7), (8, 8), (9, 9), (10, 10),
-(1, 5), (2, 6), (3, 5), (4, 6), (5, 3);
+(1, 1), (1, 7), -- Smartphone in Electronics and Beauty & Personal Care
+(2, 2), -- T-Shirt in Clothing
+(3, 3), -- Novel in Books
+(4, 4), -- Garden Hose in Home & Garden
+(5, 5), -- Board Game in Toys & Games
+(6, 6), -- Tennis Racket in Sports & Outdoors
+(7, 7), -- Face Cream in Beauty & Personal Care
+(8, 8), -- Car Phone Mount in Automotive
+(9, 9), -- Coffee Beans in Food & Grocery
+(10, 10), -- Dog Leash in Pet Supplies
+(11, 1), (11, 6), -- Wireless Earbuds in Electronics and Sports & Outdoors
+(12, 6), (12, 7); -- Yoga Mat in Sports & Outdoors and Beauty & Personal Care
 
+-- Insert test data into product_images table
 INSERT INTO product_images (product_id, image_url, is_primary) VALUES
-(1, 'https://picsum.photos/200', true),
-(1, 'https://picsum.photos/200', false),
-(2, 'https://picsum.photos/200', true),
-(3, 'https://picsum.photos/200', true),
-(4, 'https://picsum.photos/200', true),
-(5, 'https://picsum.photos/200', true),
-(6, 'https://picsum.photos/200', true),
-(7, 'https://picsum.photos/200', true),
-(8, 'https://picsum.photos/200', true),
-(9, 'https://picsum.photos/200', true),
-(10, 'https://picsum.photos/200', true),
-(2, 'https://picsum.photos/200', false),
-(3, 'https://picsum.photos/200', false);
+(1, 'https://example.com/images/smartphone_x_main.jpg', true),
+(1, 'https://example.com/images/smartphone_x_side.jpg', false),
+(2, 'https://example.com/images/tshirt_front.jpg', true),
+(2, 'https://example.com/images/tshirt_back.jpg', false),
+(3, 'https://example.com/images/novel_cover.jpg', true),
+(4, 'https://example.com/images/garden_hose.jpg', true),
+(5, 'https://example.com/images/board_game.jpg', true),
+(6, 'https://example.com/images/tennis_racket.jpg', true),
+(7, 'https://example.com/images/face_cream.jpg', true),
+(8, 'https://example.com/images/car_phone_mount.jpg', true),
+(9, 'https://example.com/images/coffee_beans.jpg', true),
+(10, 'https://example.com/images/dog_leash.jpg', true),
+(11, 'https://example.com/images/wireless_earbuds.jpg', true),
+(12, 'https://example.com/images/yoga_mat.jpg', true);
 
+-- Insert test data into tags table
 INSERT INTO tags (name) VALUES
-('tech'), ('mobile'), ('smartphone'),
-('apparel'), ('casual'), ('fashion'),
-('education'), ('programming'), ('computer science'),
-('garden'), ('outdoor'), ('home improvement'),
-('entertainment'), ('family'), ('indoor activity'),
-('sports'), ('tennis'), ('fitness'),
-('beauty'), ('makeup'), ('cosmetics'),
-('car accessory'), ('phone accessory'), ('travel'),
-('food'), ('beverage'), ('organic'),
-('pet'), ('dog'), ('pet accessory');
+('bestseller'), ('eco-friendly'), ('new-arrival'), ('sale'),
+('organic'), ('wireless'), ('rechargeable'), ('waterproof'),
+('handmade'), ('vegan'), ('gluten-free'), ('portable'),
+('limited-edition'), ('gift-idea'), ('premium');
 
+-- Insert test data into product_tags junction table
 INSERT INTO product_tags (product_id, tag_id) VALUES
-(1, 1), (1, 2), (1, 3),
-(2, 4), (2, 5), (2, 6),
-(3, 7), (3, 8), (3, 9),
-(4, 10), (4, 11), (4, 12),
-(5, 13), (5, 14), (5, 15),
-(6, 16), (6, 17), (6, 18),
-(7, 19), (7, 20), (7, 21),
-(8, 22), (8, 23), (8, 24),
-(9, 25), (9, 26), (9, 27),
-(10, 28), (10, 29), (10, 30);
-
--- Sample queries
-
--- Get all products with their primary image and categories
-SELECT p.id, p.name, p.price, pi.image_url, STRING_AGG(c.name, ', ') as categories
-FROM products p
-LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = true
-LEFT JOIN product_categories pc ON p.id = pc.product_id
-LEFT JOIN categories c ON pc.category_id = c.id
-GROUP BY p.id, p.name, p.price, pi.image_url;
-
--- Get all products with their tags
-SELECT p.id, p.name, STRING_AGG(t.name, ', ') as tags
-FROM products p
-LEFT JOIN product_tags pt ON p.id = pt.product_id
-LEFT JOIN tags t ON pt.tag_id = t.id
-GROUP BY p.id, p.name;
-
--- Get products in a specific category
-SELECT p.id, p.name, p.price
-FROM products p
-JOIN product_categories pc ON p.id = pc.product_id
-JOIN categories c ON pc.category_id = c.id
-WHERE c.name = 'Electronics';
-
--- Search products by tag
-SELECT DISTINCT p.id, p.name, p.price
-FROM products p
-JOIN product_tags pt ON p.id = pt.product_id
-JOIN tags t ON pt.tag_id = t.id
-WHERE t.name = 'tech';
+(1, 3), (1, 6), (1, 7), -- Smartphone: new-arrival, wireless, rechargeable
+(2, 2), (2, 10), -- T-Shirt: eco-friendly, vegan
+(3, 1), (3, 14), -- Novel: bestseller, gift-idea
+(4, 8), (4, 12), -- Garden Hose: waterproof, portable
+(5, 14), (5, 13), -- Board Game: gift-idea, limited-edition
+(6, 15), (6, 12), -- Tennis Racket: premium, portable
+(7, 5), (7, 10), -- Face Cream: organic, vegan
+(8, 12), (8, 6), -- Car Phone Mount: portable, wireless
+(9, 5), (9, 11), -- Coffee Beans: organic, gluten-free
+(10, 8), (10, 2), -- Dog Leash: waterproof, eco-friendly
+(11, 6), (11, 7), (11, 8), -- Wireless Earbuds: wireless, rechargeable, waterproof
+(12, 2), (12, 12); -- Yoga Mat: eco-friendly, portable

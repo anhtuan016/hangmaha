@@ -6,12 +6,12 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Products } from "./Products";
+import { Products } from "./product.entity";
 import { Expose } from "class-transformer";
 
 @Index("categories_pkey", ["id"], { unique: true })
 @Entity("categories", { schema: "public" })
-export class Categories {
+export class Category {
   @PrimaryGeneratedColumn({ type: "integer", name: "id" })
   @Expose()
   id: number;

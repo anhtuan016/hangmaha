@@ -5,7 +5,7 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Products } from "./Products";
+import { Products } from "./product.entity";
 
 @Index("tags_pkey", ["id"], { unique: true })
 @Index("tags_name_key", ["name"], { unique: true })

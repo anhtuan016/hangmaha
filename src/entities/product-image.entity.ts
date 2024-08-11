@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Products } from "./Products";
+import { Products } from "./product.entity";
 import { Expose } from "class-transformer";
 
 @Index("product_images_pkey", ["id"], { unique: true })

@@ -6,7 +6,7 @@ import { CategoryModule } from './category/category.module';
 @Module({
   imports: [
     DatabaseModule,
-    ProductModule,
+    // ProductModule,
     CategoryModule,
   ],
 })
