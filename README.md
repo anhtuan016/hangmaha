@@ -25,3 +25,6 @@ Then, run Nest as usual:
 
 `npm run start`
 
+#TODO
+- Add common error handler
+- Add delete flag into database

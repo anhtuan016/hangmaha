@@ -1,3 +1,4 @@
+import { OmitType, PartialType } from "@nestjs/mapped-types";
 import { Expose } from "class-transformer";
 
 export class CategoryDto {
@@ -11,6 +12,10 @@ export class CategoryDto {
   createdAt: Date | null;
   @Expose()
   updatedAt: Date | null;
-//   @Expose()
-//   products: Products[];
+  //   @Expose()
+  //   products: Products[];
 }
+
+export class CreateCategoryDto extends OmitType(CategoryDto, ["createdAt", "updatedAt"] as const) {}
+
+export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {}

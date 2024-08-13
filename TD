@@ -1,0 +1,7 @@
+- Change price field type in Product. (Separate to another)
+
+
+
+Code
+- Re-add validationpipe, add validation layers
+- change to logically delete.

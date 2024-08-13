@@ -14,7 +14,8 @@ CREATE TABLE categories (
     name VARCHAR(100) NOT NULL,
     description TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP WITH TIME ZONE
 );
 
 -- Create the Product table
@@ -25,7 +26,8 @@ CREATE TABLE products (
     price DECIMAL(10, 2) NOT NULL,
     stock_quantity INTEGER NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP WITH TIME ZONE
 );
 
 -- Create the Product_Category junction table for many-to-many relationship
@@ -41,14 +43,16 @@ CREATE TABLE product_images (
     product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
     image_url VARCHAR(255) NOT NULL,
     is_primary BOOLEAN DEFAULT false,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP WITH TIME ZONE
 );
 
 -- Create the Tags table
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP WITH TIME ZONE
 );
 
 -- Create the Product_Tag junction table for many-to-many relationship
@@ -64,6 +68,12 @@ CREATE INDEX idx_product_categories_category_id ON product_categories(category_i
 CREATE INDEX idx_product_images_product_id ON product_images(product_id);
 CREATE INDEX idx_product_tags_product_id ON product_tags(product_id);
 CREATE INDEX idx_product_tags_tag_id ON product_tags(tag_id);
+
+-- Create indexes for deleted_at columns
+CREATE INDEX idx_categories_deleted_at ON categories(deleted_at);
+CREATE INDEX idx_products_deleted_at ON products(deleted_at);
+CREATE INDEX idx_product_images_deleted_at ON product_images(deleted_at);
+CREATE INDEX idx_tags_deleted_at ON tags(deleted_at);
 
 -- Insert test data into categories table
 INSERT INTO categories (name, description) VALUES

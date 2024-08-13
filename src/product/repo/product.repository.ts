@@ -1,40 +1,51 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Repository, SelectQueryBuilder } from "typeorm";
-import { Category } from "@/entities/category.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateCategoryDto, UpdateCategoryDto } from "../dto/category.dto";
+import { CreateProductDto, UpdateProductDto } from "../dto/product.dto";
+import { Product } from "@/entities/product.entity";
 
 @Injectable()
 export class CategoryRepository {
   constructor(
-    @InjectRepository(Category)
-    private readonly repository: Repository<Category>,
+    @InjectRepository(Product)
+    private readonly repository: Repository<Product>,
   ) {}
 
-  private getBaseQuery(): SelectQueryBuilder<Category> {
+  private getBaseQuery(): SelectQueryBuilder<Product> {
     return this.repository.createQueryBuilder("t").orderBy("t.name", "ASC");
   }
 
-  async getById(id: number): Promise<Category> {
+  async getById(id: number): Promise<Product> {
     const category = await this.getBaseQuery().where("t.id = :id", { id }).getOne();
     if (!category) {
       throw new NotFoundException(`Not found ${id}`);
     }
     return category;
   }
+  async getByIds(ids: number[]): Promise<Product[]> {
+    const rs = await this.getBaseQuery().where("t.id IN (:...ids)", { ids }).getMany();
+    return rs;
+  }
 
-  async findAll(page: number, pageSize: number): Promise<[Category[], number]> {
+  async findAllWithCategory(page: number, pageSize: number): Promise<[Product[], number]> {
+    return this.getBaseQuery()
+      .leftJoinAndSelect("t.categories", "category")
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getManyAndCount();
+  }
+  async findAll(page: number, pageSize: number): Promise<[Product[], number]> {
     return this.getBaseQuery()
       .skip((page - 1) * pageSize)
       .take(pageSize)
       .getManyAndCount();
   }
 
-  async create(dto: CreateCategoryDto): Promise<Category> {
+  async create(dto: CreateProductDto): Promise<Product> {
     return this.repository.create(dto);
   }
 
-  async update(dto: UpdateCategoryDto, id: number): Promise<Category> {
+  async update(dto: UpdateProductDto, id: number): Promise<Product> {
     const updatedResult = await this.repository.update(id, dto);
     if (updatedResult.affected === 0) {
       throw new NotFoundException(`Not found ${id}`);

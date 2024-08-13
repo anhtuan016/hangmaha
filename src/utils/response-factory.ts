@@ -3,25 +3,15 @@ import { ApiResponse, ApiResponseWithPaging } from "../types/api-response";
 import { ClassConstructor, plainToInstance } from "class-transformer";
 
 export class ResponseFactory {
-  static success<T>(
-    data: T,
-    dto?: ClassConstructor<T>,
-    message: string = "Ok"
-  ): ApiResponse<T> {
+  static success<T>(data: T = null, dto: ClassConstructor<T> = null, message: string = "Ok"): ApiResponse<T> {
     return {
       status: HttpStatus.OK,
       message,
-      data: !dto
-        ? plainToInstance(dto, data, { excludeExtraneousValues: false })
-        : data,
+      data: !dto ? plainToInstance(dto, data, { excludeExtraneousValues: false }) : data,
     };
   }
 
-  static error(
-    message: string,
-    status: number = HttpStatus.INTERNAL_SERVER_ERROR,
-    error?: string
-  ): ApiResponse<null> {
+  static error(message: string, status: number = HttpStatus.INTERNAL_SERVER_ERROR, error?: string): ApiResponse<null> {
     return {
       status,
       message,
@@ -30,19 +20,10 @@ export class ResponseFactory {
     };
   }
 
-  static withPaging<T>(
-    data: T,
-    page: number,
-    pageSize: number,
-    totalItems: number,
-    dto?: ClassConstructor<T>,
-    message: string = "Ok"
-  ): ApiResponseWithPaging<T> {
+  static withPaging<T>(data: T, page: number, pageSize: number, totalItems: number, dto?: ClassConstructor<T>, message: string = "Ok"): ApiResponseWithPaging<T> {
     return {
       status: HttpStatus.OK,
-      data: !dto
-        ? plainToInstance(dto, data, { excludeExtraneousValues: false })
-        : data,
+      data: !dto ? plainToInstance(dto, data, { excludeExtraneousValues: false }) : data,
       message,
       page,
       pageSize,
