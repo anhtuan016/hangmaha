@@ -1,30 +1,30 @@
 import { Injectable } from "@nestjs/common";
-import { CategoryRepository } from "@/category/repositories/category.repository";
 import { ApiResponse, ApiResponseWithPaging } from "@/types/api-response";
-import { Category } from "@/entities/category.entity";
 import { ResponseFactory } from "@/utils/response-factory";
-import { CreateCategoryDto, UpdateCategoryDto } from "@/category/dtos/category.dto";
+import { ProductRepository } from "../repositories/product.repository";
+import { Product } from "../../entities/product.entity";
+import { CreateProductDto, UpdateProductDto } from "../dtos/product.dto";
 
 @Injectable()
-export class CategoryService {
-  constructor(private readonly repository: CategoryRepository) {}
+export class ProductService {
+  constructor(private readonly repository: ProductRepository) {}
 
-  async getById(id: number): Promise<ApiResponse<Category>> {
-    const category = await this.repository.getById(id);
-    return ResponseFactory.success(category);
+  async getById(id: number): Promise<ApiResponse<Product>> {
+    const product = await this.repository.getById(id);
+    return ResponseFactory.success(product);
   }
 
-  async findAll(page = 1, pageSize = 10): Promise<ApiResponseWithPaging<Category[]>> {
+  async findAll(page = 1, pageSize = 10): Promise<ApiResponseWithPaging<Product[]>> {
     const [data, totalCount] = await this.repository.findAll(page, pageSize);
     return ResponseFactory.withPaging(data, page, pageSize, totalCount);
   }
 
-  async create(dto: CreateCategoryDto): Promise<ApiResponse<Category>> {
+  async create(dto: CreateProductDto): Promise<ApiResponse<Product>> {
     const newObj = await this.repository.create(dto);
     return ResponseFactory.success(newObj, null);
   }
 
-  async update(dto: UpdateCategoryDto): Promise<ApiResponse<Category>> {
+  async update(dto: UpdateProductDto): Promise<ApiResponse<Product>> {
     const exists = await this.repository.getById(dto.id);
     const updatedObj = await this.repository.update(dto, exists.id);
     return ResponseFactory.success(updatedObj, null);

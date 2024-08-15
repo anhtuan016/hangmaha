@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { Category } from "@/entities/category.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateCategoryDto, UpdateCategoryDto } from "../dto/category.dto";
+import { CreateCategoryDto, UpdateCategoryDto } from "../dtos/category.dto";
 
 @Injectable()
 export class CategoryRepository {
@@ -21,6 +21,10 @@ export class CategoryRepository {
       throw new NotFoundException(`Not found ${id}`);
     }
     return category;
+  }
+
+  async getByIds(ids: number[]): Promise<Category[]> {
+    return this.getBaseQuery().where("t.id IN (...ids)", { ids }).getMany();
   }
 
   async findAll(page: number, pageSize: number): Promise<[Category[], number]> {

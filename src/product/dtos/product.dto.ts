@@ -1,6 +1,6 @@
 import { OmitType, PartialType } from "@nestjs/mapped-types";
 import { Expose } from "class-transformer";
-import { CategoryDto } from "@/category/dto/category.dto";
+import { CategoryDto } from "@/category/dtos/category.dto";
 
 export class ProductDto {
   @Expose()

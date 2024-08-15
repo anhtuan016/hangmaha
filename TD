@@ -1,7 +1,8 @@
-- Change price field type in Product. (Separate to another)
+- Change price field type in Product. (Separate to another table)
 
 
 
 Code
 - Re-add validationpipe, add validation layers
 - change to logically delete.
+- Recheck updatedAt, deletedAt, createdAt

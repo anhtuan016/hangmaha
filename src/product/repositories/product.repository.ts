@@ -1,14 +1,16 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { CategoryRepository } from '@/category/repositories/category.repository';
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateProductDto, UpdateProductDto } from "../dto/product.dto";
+import { CreateProductDto, UpdateProductDto } from "../dtos/product.dto";
 import { Product } from "@/entities/product.entity";
 
 @Injectable()
-export class CategoryRepository {
+export class ProductRepository {
   constructor(
     @InjectRepository(Product)
     private readonly repository: Repository<Product>,
+    private readonly categoryRepository:CategoryRepository
   ) {}
 
   private getBaseQuery(): SelectQueryBuilder<Product> {
@@ -42,7 +44,29 @@ export class CategoryRepository {
   }
 
   async create(dto: CreateProductDto): Promise<Product> {
-    return this.repository.create(dto);
+    // Category
+    let categories = [];
+    let tags = [];
+    let productImages = [];
+    if(!dto.categories) {
+      throw new BadRequestException(`Lack category`);
+    }
+    categories = await this.categoryRepository.getByIds(dto.categories.map(c => c.id));
+    if(dto.tags){
+      // TODO tags fetching here
+      tags = []
+    }
+    if(dto.productImages){
+      // TODO image fetching here
+      productImages = [];
+    }
+    const product = this.repository.create({
+      ...dto,
+      categories,
+      tags,
+      productImages
+    })
+    return this.repository.save(product);
   }
 
   async update(dto: UpdateProductDto, id: number): Promise<Product> {

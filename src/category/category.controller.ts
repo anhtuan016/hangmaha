@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestj
 import { CategoryService } from "@/category/services/category.service";
 import { ApiResponse, ApiResponseWithPaging } from "@/types/api-response";
 import { Category } from "@/entities/category.entity";
-import { CreateCategoryDto, UpdateCategoryDto } from "@/category/dto/category.dto";
+import { CreateCategoryDto, UpdateCategoryDto } from "@/category/dtos/category.dto";
 
 @Controller("category")
 export class CategoryController {
