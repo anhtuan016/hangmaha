@@ -1,8 +1,7 @@
-import { Category } from "../entities/category.entity";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import databaseConfig from "./database.config";
+import databaseConfig from "@/database/database.config";
 
 @Module({
   imports: [

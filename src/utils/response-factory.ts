@@ -2,6 +2,13 @@ import { HttpStatus } from "@nestjs/common";
 import { ApiResponse, ApiResponseWithPaging } from "../types/api-response";
 import { ClassConstructor, plainToInstance } from "class-transformer";
 
+export type PagingOptions = {
+  page?: number,
+  pageSize?: number,
+  totalItems?: number,
+  totalPages?: number
+}
+
 export class ResponseFactory {
   static success<T>(data: T = null, dto: ClassConstructor<T> = null, message: string = "Ok"): ApiResponse<T> {
     return {
@@ -20,15 +27,18 @@ export class ResponseFactory {
     };
   }
 
-  static withPaging<T>(data: T, page: number, pageSize: number, totalItems: number, dto?: ClassConstructor<T>, message: string = "Ok"): ApiResponseWithPaging<T> {
+  static withPaging<T>(data: T, pagination: PagingOptions, dto?: ClassConstructor<T>, message: string = "Ok"): ApiResponseWithPaging<T> {
     return {
       status: HttpStatus.OK,
       data: !dto ? plainToInstance(dto, data, { excludeExtraneousValues: false }) : data,
       message,
-      page,
-      pageSize,
-      totalItems,
-      totalPages: Math.ceil(totalItems / pageSize),
+      pagination: {
+        page: pagination.page,
+        pageSize: pagination.pageSize,
+        totalItems: pagination.totalItems,
+        totalPages: Math.ceil(pagination.totalItems / pagination.pageSize),
+
+      }
     };
   }
 }

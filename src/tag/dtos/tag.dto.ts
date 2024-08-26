@@ -1,12 +1,15 @@
 import { Expose } from "class-transformer";
-import { ProductDto } from "../../product/dtos/product.dto";
 import { OmitType, PartialType } from "@nestjs/mapped-types";
+import { ProductDto } from "@/product/dtos/product.dto";
+import { IsNotEmpty, IsString } from "class-validator";
 
 export class TagDto {
   @Expose()
   id: number;
 
   @Expose()
+  @IsString()
+  @IsNotEmpty()
   name: string;
 
   @Expose()

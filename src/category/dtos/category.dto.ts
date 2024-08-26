@@ -1,5 +1,7 @@
+import { Product } from "@/entities/product.entity";
 import { OmitType, PartialType } from "@nestjs/mapped-types";
 import { Expose } from "class-transformer";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CategoryDto {
   @Expose()
@@ -12,10 +14,25 @@ export class CategoryDto {
   createdAt: Date | null;
   @Expose()
   updatedAt: Date | null;
-  //   @Expose()
-  //   products: Products[];
+  @Expose()
+  products?: Product[];
 }
+export class CreateCategoryDto {
+  @Expose()
+  id?: number;
 
-export class CreateCategoryDto extends OmitType(CategoryDto, ["createdAt", "updatedAt"] as const) {}
+  @IsString()
+  @IsNotEmpty()
+  @Expose()
+  name: string;
+
+  @Expose()
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @Expose()
+  products?: Product[];
+}
 
 export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {}

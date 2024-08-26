@@ -46,7 +46,7 @@ export class Category {
 
   @ManyToMany(() => Product, (product) => product.categories)
   @JoinTable({
-    name: "product_categories",
+    name: "products_x_categories",
     joinColumns: [{ name: "category_id", referencedColumnName: "id" }],
     inverseJoinColumns: [{ name: "product_id", referencedColumnName: "id" }],
     schema: "public",

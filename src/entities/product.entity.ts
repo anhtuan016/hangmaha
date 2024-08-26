@@ -23,12 +23,24 @@ import { Expose } from 'class-transformer';
   name: string;
 
   @Expose()
+  @Column("character varying", { name: "qrCode", length: 255 })
+  qrCode: string;
+
+  @Expose()
+  @Column("character varying", { name: "barCode", length: 255 })
+  barCode: string;
+
+  @Expose()
   @Column("text", { name: "description", nullable: true })
   description: string | null;
 
   @Expose()
+  @Column("text", { name: "html", nullable: true })
+  html: string | null;
+
+  @Expose()
   @Column("numeric", { name: "price", precision: 10, scale: 2 })
-  price: string;
+  price: number;
 
   @Expose()
   @Column("integer", { name: "stock_quantity" })
@@ -62,7 +74,7 @@ import { Expose } from 'class-transformer';
 
   @ManyToMany(() => Tag, (tag) => tag.products)
   @JoinTable({
-    name: "product_tags",
+    name: "products_x_tags",
     joinColumns: [{ name: "product_id", referencedColumnName: "id" }],
     inverseJoinColumns: [{ name: "tag_id", referencedColumnName: "id" }],
     schema: "public",

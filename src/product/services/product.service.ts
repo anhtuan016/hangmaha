@@ -16,7 +16,7 @@ export class ProductService {
 
   async findAll(page = 1, pageSize = 10): Promise<ApiResponseWithPaging<Product[]>> {
     const [data, totalCount] = await this.repository.findAll(page, pageSize);
-    return ResponseFactory.withPaging(data, page, pageSize, totalCount);
+    return ResponseFactory.withPaging(data,{ page, pageSize,totalItems: totalCount});
   }
 
   async create(dto: CreateProductDto): Promise<ApiResponse<Product>> {

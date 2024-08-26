@@ -2,7 +2,7 @@ import { Repository, SelectQueryBuilder } from "typeorm";
 import { Tag } from "@/entities/tag.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { TagDto } from "../dtos/tag.dto";
+import { CreateTagDto } from "@/tag/dtos/tag.dto";
 
 @Injectable()
 export class TagRepository {
@@ -14,11 +14,11 @@ export class TagRepository {
   private getBaseQuery(): SelectQueryBuilder<Tag> {
     return this.repository.createQueryBuilder("t").orderBy("t.name", "ASC");
   }
-  async findAll(page: number = 1, pageSize: number = 10): Promise<Tag[]> {
+  async findAll(page: number = 1, pageSize: number = 10): Promise<[Tag[], number]> {
     return this.getBaseQuery()
       .limit(pageSize)
       .skip((page - 1) * pageSize)
-      .getMany();
+      .getManyAndCount();
   }
 
   async getById(id: number): Promise<Tag> {
@@ -37,7 +37,7 @@ export class TagRepository {
     await this.repository.delete(id);
   }
 
-  async create(dto: TagDto): Promise<Tag> {
+  async create(dto: CreateTagDto): Promise<Tag> {
     const tag = this.repository.create({
       ...dto,
     });

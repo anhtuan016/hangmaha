@@ -6,8 +6,10 @@ export interface ApiResponse<T> {
 }
 
 export interface ApiResponseWithPaging<T> extends ApiResponse<T> {
-  page: number;
-  pageSize: number;
-  totalItems: number;
-  totalPages: number;
+  pagination: {
+    page: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+  };
 }
