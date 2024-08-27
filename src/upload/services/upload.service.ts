@@ -3,7 +3,7 @@ import { getCurrentDateTime } from "@/utils/date-utils";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { existsSync, mkdirSync } from "fs";
 import { diskStorage, FileFilterCallback, Options } from "multer";
-import { join } from "path";
+import { join, isAbsolute } from "path";
 import { v4 as uuidv4 } from "uuid";
 
 @Injectable()
@@ -12,7 +12,11 @@ export class UploadService {
   private finalPath: string;
   constructor(private configService: ConfigService) {
     this.uploadDir = this.configService.get<string>("UPLOAD_PATH", "UPLOAD_PATH NOT FOUND");
-    this.finalPath = join(__dirname, "..", "..", this.uploadDir);
+    if (isAbsolute(this.uploadDir)) {
+      this.finalPath = this.uploadDir;
+    } else {
+      this.finalPath = join(__dirname, "..", "..", this.uploadDir);
+    }
     this.ensureUploadDirExists();
   }
   private ensureUploadDirExists() {
@@ -26,7 +30,7 @@ export class UploadService {
         destination: this.finalPath,
         filename: (req, file, cb) => {
           const fileExtension = file.originalname.split(".").pop();
-          const fileName = `${uuidv4()}-${getCurrentDateTime()}.${fileExtension}}`;
+          const fileName = `${uuidv4()}-${getCurrentDateTime()}.${fileExtension}`;
           cb(null, fileName);
         },
       }),

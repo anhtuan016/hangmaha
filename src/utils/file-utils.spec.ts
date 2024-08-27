@@ -1,32 +1,52 @@
-import { processDirPath } from "./file-utils";
+import { isInvalidPath } from "./file-utils"; // Adjust the import path according to your file structure
 
-describe("processDirPath", () => {
-  test('should return "Windows Absolute" for Windows absolute paths', () => {
-    expect(processDirPath("C:\\Users\\User\\Documents")).toBe("Windows Absolute");
-    expect(processDirPath("D:\\Projects\\Code")).toBe("Windows Absolute");
+describe("isInvalidPath", () => {
+  it("should return true for paths with invalid characters", () => {
+    const invalidPaths = [
+      "C:\\path\\with<invalid>",
+      "C:\\path\\with:invalid",
+      'C:\\path\\with"invalid"',
+      "C:\\path\\with|invalid",
+      "C:\\path\\with?invalid",
+      "C:\\path\\with*invalid",
+      "<invalidPath>",
+      ":invalidPath",
+      '"invalidPath"',
+      "|invalidPath",
+      "?invalidPath",
+      "*invalidPath",
+    ];
+
+    invalidPaths.forEach((path) => {
+      expect(isInvalidPath(path)).toBe(true);
+    });
   });
 
-  test('should return "Linux or MacOS Absolute" for Linux or MacOS absolute paths', () => {
-    expect(processDirPath("/home/user/documents")).toBe("Linux or MacOS Absolute");
-    expect(processDirPath("/Users/user/documents")).toBe("Linux or MacOS Absolute");
+  it("should return false for valid paths", () => {
+    const validPaths = ["C:\\valid\\path\\file.txt", "/home/user/docs", "./relative/path/file.txt", "../relative/path", "C:\\Users\\Public", "/usr/local/bin", "C:/valid/path/file.txt"];
+
+    validPaths.forEach((path) => {
+      expect(isInvalidPath(path)).toBe(false);
+    });
   });
 
-  test('should return "Relative" for relative paths', () => {
-    expect(processDirPath("Documents\\file.txt")).toBe("Relative");
-    expect(processDirPath("documents/file.txt")).toBe("Relative");
-    expect(processDirPath("some/relative/path")).toBe("Relative");
-    expect(processDirPath("some\\relative\\path")).toBe("Relative");
-    expect(processDirPath("home/user/documents")).toBe("Relative");
-    expect(processDirPath(".\\relative\\path")).toBe("Relative");
-    expect(processDirPath("./user/documents")).toBe("Relative");
-    expect(processDirPath("..\\relative\\path")).toBe("Relative");
-    expect(processDirPath("../user/documents")).toBe("Relative");
+  it("should return false for empty strings", () => {
+    expect(isInvalidPath("")).toBe(false);
   });
 
-  test('should return "Unknown" for unknown paths', () => {
-    expect(processDirPath("")).toBe("Unknown");
-    expect(processDirPath("C:Users\\User\\Documents")).toBe("Unknown");
-    expect(processDirPath("...\\User\\Documents")).toBe("Unknown");
-    expect(processDirPath(".../user/documents")).toBe("Unknown");
+  it("should return false for paths without invalid characters", () => {
+    const noInvalidChars = ["simplepath", "another\\simple\\path", "/yet/another/path", "C:\\path\\with\\dots.ext", "./relative/with/dots.ext"];
+
+    noInvalidChars.forEach((path) => {
+      expect(isInvalidPath(path)).toBe(false);
+    });
+  });
+
+  it("should return true for paths that are only invalid characters", () => {
+    const onlyInvalidChars = ["<>", ':"', "|", "?", "*"];
+
+    onlyInvalidChars.forEach((path) => {
+      expect(isInvalidPath(path)).toBe(true);
+    });
   });
 });

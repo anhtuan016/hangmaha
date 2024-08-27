@@ -3,6 +3,12 @@
 
 
 Code
-- Re-add validationpipe, add validation layers
 - change to logically delete.
 - Recheck updatedAt, deletedAt, createdAt
+
+
+#TODO
+- Add delete flag into database
+
+- Implement Redis, cache system (cache which layers ?)
+- Implement Auth, Auth microservice?

@@ -21,20 +21,25 @@ export class AllExceptionsFilter implements ExceptionFilter {
         message = this.handleValidationErrors((responseBody as any).message);
       }
     }
+    let exceptionRaw = "";
+    try {
+      exceptionRaw = JSON.stringify(exception);
+    } catch (e) {}
 
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
       message,
+      raw: exceptionRaw,
     });
   }
 
   private handleValidationErrors(messages: any[]): any {
     if (messages && messages.length > 0) {
       const errors = messages as ValidationError[];
-      console.log(`errors: `, JSON.stringify(errors))
-      return errors.join('; ');
+      console.log(`errors: `, JSON.stringify(errors));
+      return errors.join("; ");
     }
     return "Validation failed";
   }
