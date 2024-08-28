@@ -1,6 +1,9 @@
 import { UploadInterceptor, UploadMultipleInterceptor } from "@/upload/interceptors/upload.interceptor";
 import { UploadService } from "@/upload/services/upload.service";
-import { BadRequestException, Controller, Post, UploadedFile, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { ResponseFactory } from "@/utils/response-factory";
+import { BadRequestException, Controller, Post, Req, Res, UploadedFile, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import * as Busboy from "busboy";
+import { Request, Response } from "express";
 
 @Controller("upload")
 export class UploadController {
@@ -28,5 +31,32 @@ export class UploadController {
       message: "Files uploaded successfully",
       filenames: fileNames,
     };
+  }
+
+  @Post("stream")
+  async streamFile(@Req() req: Request, @Res() res: Response) {
+    const busboy = new Busboy({ headers: req.headers });
+    const uploadedFiles = [];
+
+    busboy.on("file", (fieldName, file, { filename, encoding, mimeType }) => {
+      this.uploadService
+        .handleFileStream(file, filename, mimeType)
+        .then((filePath) => {
+          uploadedFiles.push({ filename, filePath });
+        })
+        .catch((err) => {
+          file.resume();
+          throw new BadRequestException(`File upload failed: ${err.message}`);
+        });
+    });
+
+    busboy.on("finish", () => {
+      if (uploadedFiles.length === 0) {
+        throw new BadRequestException("No files were uploaded");
+      }
+      ResponseFactory.success(uploadedFiles, null, "Files uploaded successfully");
+    });
+
+    req.pipe(busboy);
   }
 }

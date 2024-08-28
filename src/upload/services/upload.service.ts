@@ -1,7 +1,7 @@
 import { ConfigService } from "@nestjs/config";
 import { getCurrentDateTime } from "@/utils/date-utils";
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { existsSync, mkdirSync } from "fs";
+import { createWriteStream, existsSync, mkdirSync } from "fs";
 import { diskStorage, FileFilterCallback, Options } from "multer";
 import { join, isAbsolute } from "path";
 import { v4 as uuidv4 } from "uuid";
@@ -45,5 +45,18 @@ export class UploadService {
         fileSize: 1024 * 1024 * 5, // 5MB file size limit
       },
     };
+  }
+
+  async handleFileStream(fileStream: NodeJS.ReadableStream, filename: string, mimeType: string) {
+    return new Promise( (resolve, reject) => {
+      if(!mimeType.match(/\/(jpg|jpeg|png|gif|pdf|csv|xlsx|xls)$/)){
+        reject(new BadRequestException('Only support jpg|jpeg|png|gif|pdf|csv|xlsx|xls'));
+      }
+      const writeStream = createWriteStream(this.finalPath);
+      fileStream.pipe(writeStream);
+
+      writeStream.on('finish', () => resolve(this.finalPath));
+      writeStream.on('error', (err) => reject(err));
+    })
   }
 }
