@@ -24,4 +24,3 @@ After running the sample, you can stop the Docker container with
 Then, run Nest as usual:
 
 `npm run start`
-

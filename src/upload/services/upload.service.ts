@@ -48,14 +48,15 @@ export class UploadService {
   }
 
   async handleFileStream(fileStream: NodeJS.ReadableStream, filename: string, mimeType: string) {
+    const filePath = join(this.finalPath, `${getCurrentDateTime()}${filename}`);
     return new Promise( (resolve, reject) => {
       if(!mimeType.match(/\/(jpg|jpeg|png|gif|pdf|csv|xlsx|xls)$/)){
         reject(new BadRequestException('Only support jpg|jpeg|png|gif|pdf|csv|xlsx|xls'));
       }
-      const writeStream = createWriteStream(this.finalPath);
+      const writeStream = createWriteStream(filePath);
       fileStream.pipe(writeStream);
 
-      writeStream.on('finish', () => resolve(this.finalPath));
+      writeStream.on('finish', () => resolve(filePath));
       writeStream.on('error', (err) => reject(err));
     })
   }

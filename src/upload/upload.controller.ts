@@ -35,7 +35,7 @@ export class UploadController {
 
   @Post("stream")
   async streamFile(@Req() req: Request, @Res() res: Response) {
-    const busboy = new Busboy({ headers: req.headers });
+    const busboy = Busboy({ headers: req.headers });
     const uploadedFiles = [];
 
     busboy.on("file", (fieldName, file, { filename, encoding, mimeType }) => {
@@ -51,10 +51,11 @@ export class UploadController {
     });
 
     busboy.on("finish", () => {
+      console.log(`busboy finished`);
       if (uploadedFiles.length === 0) {
         throw new BadRequestException("No files were uploaded");
       }
-      ResponseFactory.success(uploadedFiles, null, "Files uploaded successfully");
+      res.json(ResponseFactory.success(uploadedFiles,null, 'Files streamly uploaded'));
     });
 
     req.pipe(busboy);
