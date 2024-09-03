@@ -4,12 +4,38 @@ DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 
 -- Drop existing tables if they exist
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS user_profiles;
 DROP TABLE IF EXISTS products_x_tags;
 DROP TABLE IF EXISTS products_x_categories;
 DROP TABLE IF EXISTS product_images;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS tags;
+
+-- Create the Users table
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(200) UNIQUE,
+    email VARCHAR(200) UNIQUE,
+    password VARCHAR(200), -- Optional if users can register traditionally, can be NULL for social logins
+    provider VARCHAR(25) DEFAULT 'local', -- 'local' for traditional signup, 'google' for Google login, etc.
+    provider_id VARCHAR(255), -- Stores the ID provided by the OAuth provider (e.g., Google)
+    status VARCHAR(20) DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP
+)
+
+CREATE TABLE user_profiles (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    display_name VARCHAR(200),
+    avatar_url TEXT,
+    bio TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- Create the Category table
 CREATE TABLE categories (

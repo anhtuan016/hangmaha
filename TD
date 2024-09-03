@@ -13,5 +13,8 @@ Code
 - Implement Redis, cache system (cache which layers ?)
 - Implement Auth, Auth microservice?
 
+03/09:
+https://chatgpt.com/c/ed4e2781-2e95-44af-84f8-f1826e8c41f5
+old:
 https://chatgpt.com/c/a69e557a-e546-4ce2-9999-8fc9b18af5c8
 https://chatgpt.com/c/0892ea3d-20a9-4366-ba04-d413765cc53c
