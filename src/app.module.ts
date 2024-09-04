@@ -5,9 +5,8 @@ import { CategoryModule } from '@/category/category.module';
 import { TagModule } from '@/tag/tag.module';
 import { ProductImageModule } from '@/product-image/product-image.module';
 import { UploadModule } from './upload/upload.module';
-import { AuthService } from './auth/services/auth.service';
-import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
+import { HealthCheckController } from './health-check/health-check.controller';
 
 @Module({
   imports: [
@@ -19,7 +18,7 @@ import { AuthModule } from './auth/auth.module';
     UploadModule,
     AuthModule,
   ],
-  providers: [AuthService],
-  controllers: [AuthController],
+  providers: [],
+  controllers: [HealthCheckController],
 })
 export class AppModule {}
