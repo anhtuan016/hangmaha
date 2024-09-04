@@ -1,4 +1,5 @@
 import { AuthController } from "@/auth/auth.controller";
+import { AuthRepository } from "@/auth/repositories/auth.repository";
 import { AuthService } from "@/auth/services/auth.service";
 import { JwtStrategy } from "@/auth/strategies/jwt.strategy";
 import { UserProfile } from "@/entities/user-profile.entity";
@@ -19,7 +20,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, RedisService],
+  providers: [AuthService, JwtStrategy, RedisService, AuthRepository],
   exports: [],
 })
 export class AuthModule {}

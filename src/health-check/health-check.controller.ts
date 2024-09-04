@@ -1,15 +1,19 @@
-import { Controller, Get, HttpStatus, Post, Res } from "@nestjs/common";
-import { Response } from "express";
+import { Controller, Get, HttpCode, HttpStatus, Logger, Post } from "@nestjs/common";
 
 @Controller("health-check")
 export class HealthCheckController {
+  private readonly logger = new Logger(HealthCheckController.name);
   @Get()
-  pingGet(@Res() res: Response) {
-    return res.status(HttpStatus.OK).json({ status: 200, msg: "ok" });
+  @HttpCode(HttpStatus.OK)
+  pingGet() {
+    this.logger.log("HEALTH OK");
+    return { status: 200, msg: "ok" };
   }
 
   @Post()
-  pingPost(@Res() res: Response) {
-    return res.status(HttpStatus.OK).json({ status: 200, msg: "ok" });
+  @HttpCode(HttpStatus.CREATED)
+  pingPost() {
+    this.logger.log("HEALTH OK");
+    return { status: 200, msg: "ok" };
   }
 }
